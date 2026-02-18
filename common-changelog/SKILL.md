@@ -9,7 +9,8 @@ Write human-facing changelog entries in Common Changelog format.
 
 ## When to use
 
-Use this skill when asked to generate, update, or normalize `CHANGELOG.md` from commits, PRs, or release notes.
+Use this skill when asked to generate, update, or normalize `CHANGELOG.md` from commits, PRs, or
+release notes.
 
 ## Goal
 
@@ -46,8 +47,8 @@ Bullet shape:
 Example:
 
 ```markdown
-- Add `--json` output mode ([#123](https://github.com/OWNER/REPO/pull/123))
-  (JIRA-456) ([`a1b2c3d`](https://github.com/OWNER/REPO/commit/a1b2c3d)) (Bob)
+- Add `--json` output mode ([#123](https://github.com/OWNER/REPO/pull/123)) (JIRA-456)
+  ([`a1b2c3d`](https://github.com/OWNER/REPO/commit/a1b2c3d)) (Bob)
 ```
 
 ## Input model
@@ -78,7 +79,8 @@ For `Ref`, `Re`, and the keywords above:
 
 - matching is case-insensitive
 - `:` is optional (for example `Ref ABC-123` and `Ref: ABC-123` are both valid)
-- treat GitHub keywords as reference signals only when an issue target is present (for example `Fixes #123`)
+- treat GitHub keywords as reference signals only when an issue target is present (for example
+  `Fixes #123`)
 
 ## Classification algorithm
 
