@@ -23,7 +23,8 @@ _Optional one-line notice, for example migration instructions._
 
 - **Breaking:** Remove v1 auth endpoint; migrate clients to `/v2/auth`
   ([#123](https://github.com/OWNER/REPO/pull/123), RFC-77)
-  ([`abcdef1`](https://github.com/OWNER/REPO/commit/abcdef1), [`bcdefa2`](https://github.com/OWNER/REPO/commit/bcdefa2)) (Bob, Alice)
+  ([`abcdef1`](https://github.com/OWNER/REPO/commit/abcdef1),
+  [`bcdefa2`](https://github.com/OWNER/REPO/commit/bcdefa2)) (Bob, Alice)
 - Bump `math-utils` to 4.5.6 ([#456](https://github.com/OWNER/REPO/issues/456), JIRA-123)
   ([`d23ba8f`](https://github.com/OWNER/REPO/commit/d23ba8f)) (Bob, Alice)
 
