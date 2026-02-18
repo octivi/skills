@@ -16,39 +16,55 @@ release notes.
 
 Help readers answer: what changed and how it affects them.
 
+## Normative language
+
+- `MUST`: mandatory requirement; fail output if violated
+- `SHOULD`: recommended default; may be overridden only by explicit user instruction
+- `MAY`: optional behavior
+
 ## Output format
 
-- File name: `CHANGELOG.md`
-- First heading: `# Changelog`
-- Releases sorted latest-first (semantic version)
-- Release heading:
-  - preferred: `## [1.2.3] - YYYY-MM-DD`
-  - allowed: `## 1.2.3 - YYYY-MM-DD`
-- Allowed groups, always in this order: `Changed`, `Added`, `Removed`, `Fixed`
-- Do not emit empty groups
+- Output file MUST be `CHANGELOG.md`
+- First heading MUST be `# Changelog`
+- Releases MUST be sorted latest-first (semantic version)
+- Release heading MUST include ISO date `YYYY-MM-DD`
+- Release heading SHOULD use linked version format: `## [1.2.3] - YYYY-MM-DD`
+- Release heading MAY use plain version format: `## 1.2.3 - YYYY-MM-DD`
+- Release groups MUST use only, and always in this order: `Changed`, `Added`, `Removed`, `Fixed`
+- Empty groups MUST NOT be emitted
 - If a release has no user-facing changes:
   - default: skip that release
-  - if explicitly requested to track internal-only releases: add one-line maintenance notice
+  - if explicitly requested to track internal-only releases: MAY add one-line maintenance notice
 
 ## Change writing rules
 
 - Use imperative style (`Add`, `Fix`, `Remove`, `Bump`)
 - Keep bullets concise (one line when possible)
-- Describe user impact, not internal implementation trivia
-- Prefix breaking changes with `**Breaking:**`
-- Include zero or more references, commit link, and authors in parentheses
+- Bullets MUST describe user impact, not internal implementation trivia
+- Breaking changes MUST be prefixed with `**Breaking:**`
+- Each bullet MUST follow this group order:
+  1. optional references group
+  2. required commit-links group (at least one commit link)
+  3. required final authors group
+- References MAY be zero or more and, when present, MUST appear in one references parentheses
+  group before commit link(s)
+- If references group has multiple items, they MUST be comma-separated
+- Commit links MUST appear in one commit-links parentheses group
+- If commit-links group has multiple items, they MUST be comma-separated
+- Final authors group is REQUIRED and MUST NOT be omitted
+- If authors group has multiple items, they MUST be comma-separated
 
 Bullet shape:
 
 ```markdown
-- <summary> (<reference 1>) (<reference 2>) ... ([`<sha>`](https://github.com/OWNER/REPO/commit/<sha>)) (<authors>)
+- <summary> [ (<reference 1>, <reference 2>) ] ([`<sha 1>`](https://github.com/OWNER/REPO/commit/<sha 1>), [`<sha 2>`](https://github.com/OWNER/REPO/commit/<sha 2>)) (<author 1>, <author 2>)
 ```
 
 Example:
 
 ```markdown
-- Add `--json` output mode ([#123](https://github.com/OWNER/REPO/pull/123)) (JIRA-456)
-  ([`a1b2c3d`](https://github.com/OWNER/REPO/commit/a1b2c3d)) (Bob)
+- Add `--json` output mode ([#123](https://github.com/OWNER/REPO/pull/123), JIRA-456)
+  ([`a1b2c3d`](https://github.com/OWNER/REPO/commit/a1b2c3d), [`d4e5f6a`](https://github.com/OWNER/REPO/commit/d4e5f6a)) (Bob, Alice)
 ```
 
 ## Input model
@@ -153,9 +169,9 @@ Usually skip:
 
 ## References and authors
 
-- Commit hash must be a link:
+- Commit hash must be a markdown link:
   - ``[`d23ba8f`](https://github.com/OWNER/REPO/commit/d23ba8f)``
-- Multiple references per bullet are allowed
+- Group formatting for references, commit links, and authors MUST follow `Change writing rules`
 - Build references from:
   - explicit PR/issue links
   - `Ref` and `Re` trailers
@@ -166,10 +182,21 @@ Usually skip:
 - Reference order is deterministic:
   1. first: one high-signal repository reference (prefer PR, otherwise issue)
   2. then: remaining unique references in first-seen order
+- Commit-link order is deterministic:
+  1. deduplicate by commit hash
+  2. keep first-seen order
 - Use commit author as primary author
 - Append `Co-Authored-By:` names (extract name before `<email>`)
-- Deduplicate authors in stable order
+- Authors MUST be deduplicated in stable first-seen order
+- For aggregated bullets, authors MUST be the deduplicated union of commit authors and
+  `Co-Authored-By:` names from all included commits, preserving stable first-seen order
 - If commit author is a bot and merger is known, prefer the human merger name
+
+## Fail policy
+
+- If author cannot be determined from git metadata, MUST NOT emit that bullet; report an error
+- If no commit link can be determined for a bullet, MUST NOT emit that bullet; report an error
+- If any `MUST` rule is violated, fail output instead of silently emitting partial content
 
 ## Authoring workflow
 
@@ -191,10 +218,15 @@ Usually skip:
 ## Quality checklist
 
 - Uses only `Changed`, `Added`, `Removed`, `Fixed` in that order
-- Release heading includes ISO date `YYYY-MM-DD`
+- Release heading uses an allowed format and includes ISO date `YYYY-MM-DD`
 - Entries are user-impact oriented and concise
 - Breaking changes use `**Breaking:**`
-- References/commit links/authors are complete and consistent (including multi-reference entries)
+- Every bullet matches canonical group order: optional refs, commit-links, final authors
+- Commit-links group contains at least one link
+- Multi-item references, commit links, and authors use comma-separated lists
+- Every bullet ends with an authors parentheses group
+- References/commit links/authors are complete and consistent (including aggregated bullets)
+- Checklist failures MUST trigger `Fail policy`
 
 ## Prompt templates
 
