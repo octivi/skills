@@ -30,6 +30,14 @@ Help readers answer: what changed and how it affects them.
 - Release heading MUST include ISO date `YYYY-MM-DD`
 - Release heading SHOULD use linked version format: `## [1.2.3] - YYYY-MM-DD`
 - Release heading MAY use plain version format: `## 1.2.3 - YYYY-MM-DD`
+- If any release heading uses the linked format `## [<label>] - YYYY-MM-DD`, a trailing link
+  reference section MUST be present at the end of `CHANGELOG.md`
+- Trailing link reference section MUST define every linked heading label exactly once (for example
+  `[Unreleased]: ...` and `[1.0.0]: ...`)
+- If `Unreleased` is present as a linked heading, its reference MUST use a compare URL ending with
+  `...HEAD` (for example `https://github.com/OWNER/REPO/compare/v1.0.0...HEAD`)
+- Linked released versions SHOULD point to release tags (for example
+  `https://github.com/OWNER/REPO/releases/tag/v1.0.0`, matching repository tag conventions)
 - Release groups MUST use only, and always in this order: `Changed`, `Added`, `Removed`, `Fixed`
 - Empty groups MUST NOT be emitted
 - If a release has no user-facing changes:
@@ -219,6 +227,8 @@ Usually skip:
 
 - Uses only `Changed`, `Added`, `Removed`, `Fixed` in that order
 - Release heading uses an allowed format and includes ISO date `YYYY-MM-DD`
+- If linked release headings are used, trailing reference links exist for all linked labels and
+  `Unreleased` (when present) points to a compare URL ending with `...HEAD`
 - Entries are user-impact oriented and concise
 - Breaking changes use `**Breaking:**`
 - Every bullet matches canonical group order: optional refs, commit-links, final authors

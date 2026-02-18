@@ -4,6 +4,9 @@ Rules snapshot:
 - Releases MUST be ordered newest-first
 - Groups MUST be in strict order: Changed, Added, Removed, Fixed
 - Empty groups MUST NOT be emitted
+- If linked release headings are used (`## [x.y.z] - YYYY-MM-DD`), a trailing reference-links
+  section is REQUIRED at file end and MUST define every linked label
+- If `[Unreleased]` is used, it MUST point to a compare URL ending with `...HEAD`
 - Bullets MUST be user-facing and imperative
 - Incompatible changes MUST use **Breaking:**
 - Every bullet MUST follow group order: optional refs, commit-links, final authors
@@ -14,6 +17,10 @@ Rules snapshot:
 -->
 
 # Changelog
+
+## [Unreleased] - YYYY-MM-DD
+
+_Optional one-line notice about upcoming changes._
 
 ## [VERSION] - YYYY-MM-DD
 
@@ -43,4 +50,5 @@ _Optional one-line notice, for example migration instructions._
 - Return `400` for invalid `date` query ([#126](https://github.com/OWNER/REPO/pull/126))
   ([`defabc4`](https://github.com/OWNER/REPO/commit/defabc4)) (Bob)
 
+[Unreleased]: https://github.com/OWNER/REPO/compare/VERSION...HEAD
 [VERSION]: https://github.com/OWNER/REPO/releases/tag/VERSION
