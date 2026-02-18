@@ -18,7 +18,8 @@ This repository hosts AI skills in the Agent Skills format.
 
 - Path: `common-changelog/SKILL.md`
 - Purpose: generate and normalize `CHANGELOG.md` entries in Common Changelog format
-- Input focus: release notes, PRs, Conventional Commits, and trailers (`Category`, `Ref`, `Re`, `Co-Authored-By`)
+- Input focus: release notes, PRs, Conventional Commits, and trailers (`Category`, `Ref`, `Re`,
+  `Co-Authored-By`)
 
 ## Install skill
 
