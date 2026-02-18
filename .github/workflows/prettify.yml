@@ -11,10 +11,14 @@ on:
   push:
     branches:
       - "**"
+    paths:
+      - "**/*.md"
     # Don't run when someone pushes just tags
     tags-ignore:
       - "**"
   pull_request:
+    paths:
+      - "**/*.md"
   workflow_dispatch:
 
 jobs:
