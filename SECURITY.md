@@ -9,8 +9,8 @@ See: https://docs.github.com/en/code-security/getting-started/adding-a-security-
 
 Please do not open public issues for security vulnerabilities.
 
-Please use [GitHub Security Advisories](https://github.com/octivi/skills/security/advisories)
-as the preferred reporting channel for this repository (private disclosure).
+Please use [GitHub Security Advisories](https://github.com/octivi/skills/security/advisories) as the
+preferred reporting channel for this repository (private disclosure).
 
 If GitHub Security Advisories are not available, contact us using the details listed on
 [https://octivi.com/contact](https://octivi.com/contact) and request a private channel for
