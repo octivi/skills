@@ -240,14 +240,9 @@ Usually skip:
 
 ## Prompt templates
 
-Formal:
-
 - `Generate a Common Changelog entry for version <VERSION> from these commits and PRs. Keep only user-facing changes, include references, and mark breaking changes.`
 - `Normalize this existing changelog fragment to Common Changelog format without losing important user-impact details.`
 - `Classify these Conventional Commits into Changed/Added/Removed/Fixed and explain any skipped items.`
-
-Colloquial:
-
 - `Generate a changelog from these commits.`
 - `Write a CHANGELOG.md entry for version 1.4.0.`
 - `Convert this to Common Changelog format and remove technical noise.`
