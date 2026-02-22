@@ -6,11 +6,12 @@ Repository of installable AI skills.
 
 ### `common-changelog`
 
-Helps an AI agent write and normalize [`CHANGELOG.md`](common-changelog/references/CHANGELOG.md) entries using the
-[Common Changelog](https://common-changelog.org/) format.
+Helps an AI agent write and normalize [`CHANGELOG.md`](common-changelog/references/CHANGELOG.md)
+entries using the [Common Changelog](https://common-changelog.org/) format.
 
 - Skill path: [`common-changelog/SKILL.md`](common-changelog/SKILL.md)
-- Local template: [`common-changelog/references/CHANGELOG.md`](common-changelog/references/CHANGELOG.md)
+- Local template:
+  [`common-changelog/references/CHANGELOG.md`](common-changelog/references/CHANGELOG.md)
 
 ## Installation
 
