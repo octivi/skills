@@ -92,7 +92,8 @@ When mapping is used in `rewrite` or `review`, explicitly state:
 
 1. Identify the smallest logical change set; recommend split commits if input is too broad.
 2. Choose `type` (and optional `scope`) by user impact.
-3. If requested type is unsupported, apply `Unsupported type mapping` and explain why.
+3. If requested type is unsupported, apply `Unsupported type mapping`.
+   Explain mapping in `rewrite`/`review`; in `draft`, explain only when user asks for rationale.
 4. Draft concise imperative subject.
 5. Add body only when extra context is needed; explain why and behavior delta.
 6. Add footers/trailers (`See:`, `Co-authored-by:`, `BREAKING CHANGE:`) as needed.

@@ -30,7 +30,8 @@ Choose exactly one output mode:
    - Output MUST be a complete markdown file that starts with `# Changelog`.
 2. Release-fragment mode:
    - Use when the user asks for a single release entry (for example `1.4.0` or `Unreleased`).
-   - Output MUST contain exactly one release heading and its non-empty groups.
+   - Output MUST contain exactly one release heading and its non-empty groups, unless `FMT-9`
+     applies and the release should be skipped due to no user-facing changes.
 
 If user intent is ambiguous, default to release-fragment mode.
 
@@ -65,7 +66,7 @@ Use this table as the single source of truth for output structure and bullet for
 | `FMT-6` | `Unreleased` link      | If `Unreleased` is a linked heading, its reference MUST use a compare URL ending with `...HEAD`.                                                                                                                                                                               |
 | `FMT-7` | Release links          | Linked released versions SHOULD point to release tags (matching repository tag conventions).                                                                                                                                                                                   |
 | `FMT-8` | Sections               | Release groups MUST use only, and in this order: `Changed`, `Added`, `Removed`, `Fixed`; empty groups MUST NOT be emitted.                                                                                                                                                     |
-| `FMT-9` | No user-facing changes | If a release has no user-facing changes, default is skip; if explicitly requested, MAY add a one-line maintenance notice.                                                                                                                                                      |
+| `FMT-9` | No user-facing changes | If a release has no user-facing changes, default is skip (including release-fragment mode). If explicitly requested, MAY add a one-line maintenance notice under the release heading.                                                                                          |
 | `BUL-1` | Writing style          | Use imperative style (`Add`, `Fix`, `Remove`, `Bump`), keep bullets concise, and describe user impact (not internal trivia).                                                                                                                                                   |
 | `BUL-2` | Breaking changes       | Breaking changes MUST be prefixed with `**Breaking:**`.                                                                                                                                                                                                                        |
 | `BUL-3` | Bullet group order     | Every bullet MUST follow this order: optional references group, required commit-links group, required final authors group. Commit-links group MUST contain at least one commit link when available; otherwise use `source unavailable` and emit a warning.                     |
