@@ -1,0 +1,209 @@
+#!/usr/bin/env bash
+# shellcheck shell=bash
+
+# >>> OBB:BEGIN variant=header source=local version=local
+################################################################################
+# Octivi Bash Boilerplate (OBB) Header
+# Part of Octivi Bash Boilerplate https://github.com/octivi/bash-boilerplate
+################################################################################
+# Unofficial Bash "Strict Mode"
+# http://redsymbol.net/articles/unofficial-bash-strict-mode/
+set -euo pipefail
+# Define common constants regardless if they are used in the script
+__my_name="$(basename "${BASH_SOURCE[0]}")"
+readonly __my_name
+__my_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly __my_dir
+__my_path="${__my_dir}/${__my_name}"
+# shellcheck disable=SC2034
+readonly __my_path
+__my_args="$*"
+# shellcheck disable=SC2034
+readonly __my_args
+# Set IFS to just newline and tab
+IFS=$'\n\t'
+################################################################################
+# <<< OBB:END
+
+ROOT_DIR="."
+FAIL=0
+
+usage() {
+  cat <<EOF
+Usage:
+  ${__my_name} [-h] [<repo_root>]
+
+Arguments:
+  <repo_root>  Optional path to repository root. Default: current directory.
+
+Options:
+  -h           Show this help.
+EOF
+}
+
+error() {
+  printf 'ERROR: %s\n' "$*" >&2
+  FAIL=1
+}
+
+parse_args() {
+  local opt
+  while getopts ":h" opt; do
+    case "${opt}" in
+      h)
+        usage
+        exit 0
+        ;;
+      :)
+        error "Option -${OPTARG} requires an argument."
+        exit 2
+        ;;
+      \?)
+        error "Unknown option: -${OPTARG}"
+        exit 2
+        ;;
+    esac
+  done
+  shift $((OPTIND - 1))
+
+  if (($# > 1)); then
+    error "Unexpected positional arguments: $*"
+    exit 2
+  fi
+
+  if (($# == 1)); then
+    ROOT_DIR="$1"
+  fi
+}
+
+check_skill_frontmatter() {
+  local skill_file="$1"
+
+  if [[ ! -f "$skill_file" ]]; then
+    error "Missing required file: $skill_file"
+    return
+  fi
+
+  local status=0
+  awk '
+    NR == 1 {
+      if ($0 != "---") exit 10
+      next
+    }
+
+    !frontmatter_done && /^---$/ {
+      frontmatter_done = 1
+      exit
+    }
+
+    !frontmatter_done {
+      if ($0 ~ /^name:[[:space:]]*[^[:space:]].*/) has_name = 1
+      if ($0 ~ /^description:[[:space:]]*.+/) has_description = 1
+    }
+
+    END {
+      if (!frontmatter_done) exit 11
+      if (!has_name) exit 12
+      if (!has_description) exit 13
+    }
+  ' "$skill_file" || status=$?
+
+  case "$status" in
+    0) ;;
+    10) error "$skill_file must start with YAML frontmatter delimiter ---" ;;
+    11) error "$skill_file is missing closing YAML frontmatter delimiter ---" ;;
+    12) error "$skill_file frontmatter is missing required field: name" ;;
+    13) error "$skill_file frontmatter is missing required field: description" ;;
+    *) error "$skill_file frontmatter validation failed with status $status" ;;
+  esac
+}
+
+check_markdown_links() {
+  local file="$1"
+
+  while IFS= read -r md_link; do
+    local target
+    target="$(sed -E 's/^!?\[[^]]+\]\(([^)]*)\)$/\1/' <<<"$md_link")"
+    target="${target%% *}"
+    target="${target#<}"
+    target="${target%>}"
+
+    [[ -z "$target" ]] && continue
+    [[ "$target" == \#* ]] && continue
+    [[ "$target" =~ ^https?:// ]] && continue
+    [[ "$target" =~ ^mailto: ]] && continue
+
+    local path="${target%%#*}"
+    [[ -z "$path" ]] && continue
+    [[ "$path" == "..." ]] && continue
+
+    local resolved
+    if [[ "$path" == /* ]]; then
+      resolved=".$path"
+    else
+      resolved="$(dirname "$file")/$path"
+    fi
+
+    if [[ ! -e "$resolved" ]]; then
+      error "Broken local link in $file: $target"
+    fi
+  done < <(grep -oE '!?\[[^]]+\]\([^)]+\)' "$file" || true)
+}
+
+main() {
+  parse_args "$@"
+
+  if ! cd "$ROOT_DIR"; then
+    error "Cannot change directory to: $ROOT_DIR"
+    exit 2
+  fi
+
+  local -a skill_dirs=()
+  mapfile -t skill_dirs < <(
+    find . -mindepth 1 -maxdepth 1 -type d ! -name '.*' ! -name 'scripts' -printf '%P\n' | sort
+  )
+
+  if [[ "${#skill_dirs[@]}" -eq 0 ]]; then
+    error "No skill directories found at repository root."
+  fi
+
+  local skill_dir
+  for skill_dir in "${skill_dirs[@]}"; do
+    check_skill_frontmatter "$skill_dir/SKILL.md"
+  done
+
+  local -a doc_files=()
+  local root_doc
+  for root_doc in README.md AGENTS.md CONTRIBUTING.md; do
+    if [[ -f "$root_doc" ]]; then
+      doc_files+=("$root_doc")
+    fi
+  done
+
+  for skill_dir in "${skill_dirs[@]}"; do
+    if [[ -f "$skill_dir/README.md" ]]; then
+      doc_files+=("$skill_dir/README.md")
+    fi
+    doc_files+=("$skill_dir/SKILL.md")
+    if [[ -d "$skill_dir/references" ]]; then
+      local ref_file
+      while IFS= read -r ref_file; do
+        doc_files+=("$ref_file")
+      done < <(find "$skill_dir/references" -maxdepth 1 -type f -name '*.md' | sort)
+    fi
+  done
+
+  local doc_file
+  for doc_file in "${doc_files[@]}"; do
+    check_markdown_links "$doc_file"
+  done
+
+  if ((FAIL != 0)); then
+    printf 'Validation failed.\n' >&2
+    exit 1
+  fi
+
+  printf 'Validation succeeded.\n'
+}
+
+main "$@"
