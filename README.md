@@ -14,6 +14,7 @@ entries using the [Common Changelog](https://common-changelog.org/) format.
 
 - Skill README: [`common-changelog/README.md`](common-changelog/README.md)
 - Skill path: [`common-changelog/SKILL.md`](common-changelog/SKILL.md)
+- Reference: [`common-changelog/references/CHANGELOG.md`](common-changelog/references/CHANGELOG.md)
 
 ### `git-commits`
 
@@ -22,6 +23,7 @@ Helps an AI agent draft and review Git commit messages using the
 
 - Skill README: [`git-commits/README.md`](git-commits/README.md)
 - Skill path: [`git-commits/SKILL.md`](git-commits/SKILL.md)
+- Reference: [`git-commits/references/git-commit.md`](git-commits/references/git-commit.md)
 
 ## For AI agents
 
