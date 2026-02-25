@@ -22,58 +22,26 @@ Help readers answer: what changed and how it affects them.
 - `SHOULD`: recommended default; may be overridden only by explicit user instruction
 - `MAY`: optional behavior
 
-## Output format
+## Canonical rules table
 
-- Output file MUST be `CHANGELOG.md`
-- First heading MUST be `# Changelog`
-- Releases MUST be sorted latest-first (semantic version)
-- Release heading MUST include ISO date `YYYY-MM-DD`
-- Release heading SHOULD use linked version format: `## [1.2.3] - YYYY-MM-DD`
-- Release heading MAY use plain version format: `## 1.2.3 - YYYY-MM-DD`
-- If any release heading uses the linked format `## [<label>] - YYYY-MM-DD`, a trailing link
-  reference section MUST be present at the end of `CHANGELOG.md`
-- Trailing link reference section MUST define every linked heading label exactly once (for example
-  `[Unreleased]: ...` and `[1.0.0]: ...`)
-- If `Unreleased` is present as a linked heading, its reference MUST use a compare URL ending with
-  `...HEAD` (for example `https://github.com/OWNER/REPO/compare/v1.0.0...HEAD`)
-- Linked released versions SHOULD point to release tags (for example
-  `https://github.com/OWNER/REPO/releases/tag/v1.0.0`, matching repository tag conventions)
-- Release groups MUST use only, and always in this order: `Changed`, `Added`, `Removed`, `Fixed`
-- Empty groups MUST NOT be emitted
-- If a release has no user-facing changes:
-  - default: skip that release
-  - if explicitly requested to track internal-only releases: MAY add one-line maintenance notice
+Use this table as the single source of truth for output structure and bullet formatting.
 
-## Change writing rules
-
-- Use imperative style (`Add`, `Fix`, `Remove`, `Bump`)
-- Keep bullets concise (one line when possible)
-- Bullets MUST describe user impact, not internal implementation trivia
-- Breaking changes MUST be prefixed with `**Breaking:**`
-- Each bullet MUST follow this group order:
-  1. optional references group
-  2. required commit-links group (at least one commit link)
-  3. required final authors group
-- References MAY be zero or more and, when present, MUST appear in one references parentheses
-  group before commit link(s)
-- If references group has multiple items, they MUST be comma-separated
-- Commit links MUST appear in one commit-links parentheses group
-- If commit-links group has multiple items, they MUST be comma-separated
-- Final authors group is REQUIRED and MUST NOT be omitted
-- If authors group has multiple items, they MUST be comma-separated
-
-Bullet shape:
-
-```markdown
-- <summary> [ (<reference 1>, <reference 2>) ] ([`<sha 1>`](https://github.com/OWNER/REPO/commit/<sha 1>), [`<sha 2>`](https://github.com/OWNER/REPO/commit/<sha 2>)) (<author 1>, <author 2>)
-```
-
-Example:
-
-```markdown
-- Add `--json` output mode ([#123](https://github.com/OWNER/REPO/pull/123), JIRA-456)
-  ([`a1b2c3d`](https://github.com/OWNER/REPO/commit/a1b2c3d), [`d4e5f6a`](https://github.com/OWNER/REPO/commit/d4e5f6a)) (Bob, Alice)
-```
+| ID | Scope | Requirement |
+| --- | --- | --- |
+| `FMT-1` | File | Output file MUST be `CHANGELOG.md` and first heading MUST be `# Changelog`. |
+| `FMT-2` | Release ordering | If present, `Unreleased` MUST be the first release heading and MUST NOT be included in semantic version ordering. |
+| `FMT-3` | Release ordering | Released versions (excluding `Unreleased`) MUST be sorted latest-first by semantic version. |
+| `FMT-4` | Release headings | Release heading MUST include ISO date `YYYY-MM-DD`; linked format `## [1.2.3] - YYYY-MM-DD` is SHOULD, plain `## 1.2.3 - YYYY-MM-DD` is MAY. |
+| `FMT-5` | Link refs | If any release heading is linked (`## [<label>] - YYYY-MM-DD`), trailing link references MUST be present at file end and define each linked label exactly once. |
+| `FMT-6` | `Unreleased` link | If `Unreleased` is a linked heading, its reference MUST use a compare URL ending with `...HEAD`. |
+| `FMT-7` | Release links | Linked released versions SHOULD point to release tags (matching repository tag conventions). |
+| `FMT-8` | Sections | Release groups MUST use only, and in this order: `Changed`, `Added`, `Removed`, `Fixed`; empty groups MUST NOT be emitted. |
+| `FMT-9` | No user-facing changes | If a release has no user-facing changes, default is skip; if explicitly requested, MAY add a one-line maintenance notice. |
+| `BUL-1` | Writing style | Use imperative style (`Add`, `Fix`, `Remove`, `Bump`), keep bullets concise, and describe user impact (not internal trivia). |
+| `BUL-2` | Breaking changes | Breaking changes MUST be prefixed with `**Breaking:**`. |
+| `BUL-3` | Bullet group order | Every bullet MUST follow this order: optional references group, required commit-links group (at least one commit link), required final authors group. |
+| `BUL-4` | Group formatting | References, commit links, and authors MUST each appear in one parentheses group; multi-item groups MUST use comma-separated lists. |
+| `BUL-5` | Template source | Bullet shape and full file layout MUST follow `references/CHANGELOG.md`. |
 
 ## Input model
 
@@ -179,7 +147,7 @@ Usually skip:
 
 - Commit hash must be a markdown link:
   - ``[`d23ba8f`](https://github.com/OWNER/REPO/commit/d23ba8f)``
-- Group formatting for references, commit links, and authors MUST follow `Change writing rules`
+- Group formatting for references, commit links, and authors MUST follow `BUL-3` and `BUL-4`
 - Build references from:
   - explicit PR/issue links
   - `Ref` and `Re` trailers
@@ -214,7 +182,7 @@ Usually skip:
 4. Remove non-user-facing noise and no-op pairs (change + immediate revert).
 5. Rewrite into concise user-facing bullets.
 6. Group by `Changed`, `Added`, `Removed`, `Fixed` in that order.
-7. Run checklist.
+7. Validate against `Canonical rules table` and `references/CHANGELOG.md`.
 
 ## Anti-patterns
 
@@ -225,29 +193,15 @@ Usually skip:
 
 ## Quality checklist
 
-- Uses only `Changed`, `Added`, `Removed`, `Fixed` in that order
-- Release heading uses an allowed format and includes ISO date `YYYY-MM-DD`
-- If linked release headings are used, trailing reference links exist for all linked labels and
-  `Unreleased` (when present) points to a compare URL ending with `...HEAD`
-- Entries are user-impact oriented and concise
-- Breaking changes use `**Breaking:**`
-- Every bullet matches canonical group order: optional refs, commit-links, final authors
-- Commit-links group contains at least one link
-- Multi-item references, commit links, and authors use comma-separated lists
-- Every bullet ends with an authors parentheses group
-- References/commit links/authors are complete and consistent (including aggregated bullets)
-- Checklist failures MUST trigger `Fail policy`
+- Validate all applicable `FMT-*` and `BUL-*` requirements from `Canonical rules table`.
+- Verify output shape against `references/CHANGELOG.md`.
+- Any checklist failure MUST trigger `Fail policy`.
 
 ## Prompt templates
 
 - `Generate a Common Changelog entry for version <VERSION> from these commits and PRs. Keep only user-facing changes, include references, and mark breaking changes.`
 - `Normalize this existing changelog fragment to Common Changelog format without losing important user-impact details.`
 - `Classify these Conventional Commits into Changed/Added/Removed/Fixed and explain any skipped items.`
-- `Generate a changelog from these commits.`
-- `Write a CHANGELOG.md entry for version 1.4.0.`
-- `Convert this to Common Changelog format and remove technical noise.`
-- `Split these commits into changelog sections and show what you skipped.`
-- `Write release notes in plain language, without developer-only noise.`
 
 ## References
 
