@@ -1,0 +1,65 @@
+{
+  "skill_name": "git-commits",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Write a commit message for staged changes adding OAuth login and callback validation.",
+      "expected_output": "Draft mode returns one copy-paste-ready Conventional Commit message with valid header shape.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Rewrite this message: 'stuff changed in API'.",
+      "expected_output": "Rewrite mode returns a corrected message plus concise 'Why this is better' findings tied to violated rules.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Review this commit message for compliance: feat(api): add v2 users endpoint.",
+      "expected_output": "Review mode outputs Findings first, severity ordered, and proposes a fixed message only when needed.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Write a perf commit message for query cache tuning.",
+      "expected_output": "Unsupported type is mapped to an allowed type; in draft mode output remains a single final message without extra prose unless rationale is requested.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Rewrite as conventional commit and explain mapping for type 'hotfix'.",
+      "expected_output": "Rewrite mode explicitly states mapping (hotfix -> fix) and returns compliant message structure.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "Draft a breaking change commit for removing v1 webhook payload fields and include migration notes.",
+      "expected_output": "Header uses ! and footer includes BREAKING CHANGE with migration impact.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "Split this broad change into 3 atomic commits: DB migration, API handler update, and docs update.",
+      "expected_output": "Response proposes atomic split with valid type/scope and concise imperative subjects.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "Prepare a revert commit message for commit a1b2c3d4.",
+      "expected_output": "Revert message clearly references reverted commit and includes 'This reverts commit <hash>.' in body.",
+      "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "Create commit message with two tracker links and one co-author.",
+      "expected_output": "Footers use trailer format with one See URL per line and valid Co-authored-by trailer.",
+      "files": []
+    },
+    {
+      "id": 10,
+      "prompt": "Review whether this commit should include tests and note hygiene issues.",
+      "expected_output": "Findings cover atomicity/hygiene and test inclusion expectations when behavior changes.",
+      "files": []
+    }
+  ]
+}

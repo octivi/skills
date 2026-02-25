@@ -31,8 +31,8 @@ This repository hosts AI skills in the Agent Skills format.
 ### `git-trunk-based-workflow`
 
 - Path: `git-trunk-based-workflow/SKILL.md`
-- Purpose: guide Trunk-Based Development branch strategy, rebase flow, pull request flow, merge,
-  and branch cleanup
+- Purpose: guide Trunk-Based Development branch strategy, rebase flow, pull request flow, merge, and
+  branch cleanup
 - Input focus: short-lived feature branches, integration with `main`, safe history rewrite, and PR
   lifecycle
 
@@ -52,6 +52,7 @@ npx skills add octivi/skills --skill <skill_name>
 - `SHOULD` keep examples synchronized with canonical templates in `references/`.
 - `SHOULD` keep extended examples and detailed references in `references/` (do not duplicate in
   `SKILL.md`).
+- `MUST` route changelog and release-notes generation/normalization to `common-changelog`.
 - `MUST` route Git workflow/process questions to `git-trunk-based-workflow`.
 - `MUST` route commit message wording/formatting to `git-commits`.
 - `MUST` preserve Conventional Commits semantics when proposing commit messages.

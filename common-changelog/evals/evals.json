@@ -1,0 +1,65 @@
+{
+  "skill_name": "common-changelog",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Generate a Common Changelog release fragment for version 1.8.0 from these commits: feat(api): add /v2/report endpoint (#341), fix(ui): prevent crash on empty state (Fixes #338), chore(ci): update runner image.",
+      "expected_output": "Single release block with non-empty groups in Changed/Added/Removed/Fixed order, user-facing filtering, and references/author groups in canonical bullet shape.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Normalize this entire CHANGELOG.md to Common Changelog format and keep release links consistent.",
+      "expected_output": "Complete file output that starts with '# Changelog', maintains valid release ordering, and keeps linked heading references consistent.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Create an Unreleased section from these PR notes and do not invent release dates.",
+      "expected_output": "Unreleased heading appears first and is undated by default unless explicitly requested otherwise.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Classify commits where trailer overrides type: fix(auth): rotate token parser plus footer Category: add.",
+      "expected_output": "Category trailer override is applied before type mapping, resulting in Added classification.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Produce a release note entry for a breaking removal: feat!: remove legacy XML API, BREAKING CHANGE: clients must migrate to JSON API.",
+      "expected_output": "Entry is prefixed with '**Breaking:**' and still classified under the correct impact group.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "Generate release notes from metadata with missing commit authors and missing commit links.",
+      "expected_output": "Output keeps user-facing bullets, uses '(Unknown author)' and '(source unavailable)' fallbacks, and appends a Warnings section after the artifact.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "Given mixed technical commits, keep only user-facing changes and skip internal CI/test/style noise.",
+      "expected_output": "Non-user-facing items are omitted while user-visible behavior changes are retained and rewritten in imperative style.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "Normalize references so #123 and https://github.com/acme/repo/issues/123 are deduplicated.",
+      "expected_output": "Reference normalization and deduplication are applied with deterministic ordering rules.",
+      "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "Generate one release fragment only for 2.0.0 from the provided commit list.",
+      "expected_output": "Exactly one release block is returned (plus optional trailing Warnings metadata only if needed).",
+      "files": []
+    },
+    {
+      "id": 10,
+      "prompt": "Normalize a changelog where release headings are linked but one trailing reference definition is missing.",
+      "expected_output": "Missing link definitions are repaired so every linked heading has exactly one trailing reference.",
+      "files": []
+    }
+  ]
+}

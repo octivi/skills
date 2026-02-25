@@ -7,6 +7,7 @@ Rules snapshot:
 - If linked release headings are used (`## [x.y.z] - YYYY-MM-DD`), a trailing reference-links
   section is REQUIRED at file end and MUST define every linked label
 - If `[Unreleased]` is used, it MUST point to a compare URL ending with `...HEAD`
+- `Unreleased` SHOULD be undated unless explicitly requested by the user
 - Bullets MUST be user-facing and imperative
 - Incompatible changes MUST use **Breaking:**
 - Every bullet MUST follow group order: optional refs, commit-links, final authors
@@ -18,7 +19,7 @@ Rules snapshot:
 
 # Changelog
 
-## [Unreleased] - YYYY-MM-DD
+## [Unreleased]
 
 _Optional one-line notice about upcoming changes._
 

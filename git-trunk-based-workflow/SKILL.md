@@ -1,6 +1,6 @@
 ---
 name: git-trunk-based-workflow
-description: Plan and execute Git Trunk-Based Development workflows on a repository with main as trunk. Use when the user asks for branch strategy, rebasing on main, PR flow, merge strategy, safe history rewrite, or branch cleanup. For commit message formatting and Conventional Commits wording, delegate to git-commits.
+description: Plan and execute Git Trunk-Based Development workflows on a repository with main as trunk. Use whenever the user asks about branch strategy, branch naming, rebasing on main, merge conflicts during rebase, PR flow, merge strategy, safe history rewrite, or branch cleanup, even if they do not mention "trunk-based" explicitly. For commit message formatting and Conventional Commits wording, delegate to git-commits.
 ---
 
 # Git Trunk-Based Workflow
@@ -15,17 +15,17 @@ Keep `main` releasable while integrating small changes frequently and predictabl
 
 Use this table as the single source of truth for workflow decisions.
 
-| ID     | Scope            | Requirement                                                                                 |
-| ------ | ---------------- | ------------------------------------------------------------------------------------------- |
-| `WF-1` | Trunk policy     | Never commit directly to `main`; use short-lived feature branches and pull requests.        |
-| `WF-2` | Branch lifecycle | Feature branches SHOULD stay focused and short-lived; delete branches after merge.          |
-| `WF-3` | Integration      | Rebase feature branch on top of `main` frequently to minimize integration drift.            |
-| `WF-4` | History rewrite  | If branch history was rewritten (rebase/squash), push with `--force-with-lease` only.       |
-| `WF-5` | PR quality       | Open PR to `main`, keep CI green, and address review feedback before merge.                 |
-| `WF-6` | Merge mode       | Prefer standard repository merge path (typically GitHub UI) unless local merge is required. |
-| `WF-7` | Cleanup          | After merge, clean up local/remote branch references.                                       |
-| `WF-8` | Safety           | Commands provided to users MUST be copy-paste ready and scoped to their current step.       |
-| `WF-9` | Preflight        | Before branch operations, verify current branch and working tree state.                      |
+| ID      | Scope             | Requirement                                                                                 |
+| ------- | ----------------- | ------------------------------------------------------------------------------------------- |
+| `WF-1`  | Trunk policy      | Never commit directly to `main`; use short-lived feature branches and pull requests.        |
+| `WF-2`  | Branch lifecycle  | Feature branches SHOULD stay focused and short-lived; delete branches after merge.          |
+| `WF-3`  | Integration       | Rebase feature branch on top of `main` frequently to minimize integration drift.            |
+| `WF-4`  | History rewrite   | If branch history was rewritten (rebase/squash), push with `--force-with-lease` only.       |
+| `WF-5`  | PR quality        | Open PR to `main`, keep CI green, and address review feedback before merge.                 |
+| `WF-6`  | Merge mode        | Prefer standard repository merge path (typically GitHub UI) unless local merge is required. |
+| `WF-7`  | Cleanup           | After merge, clean up local/remote branch references.                                       |
+| `WF-8`  | Safety            | Commands provided to users MUST be copy-paste ready and scoped to their current step.       |
+| `WF-9`  | Preflight         | Before branch operations, verify current branch and working tree state.                     |
 | `WF-10` | Conflict recovery | Rebase guidance MUST include safe conflict resolution (`--continue` / `--abort`).           |
 
 ## Branch state preflight

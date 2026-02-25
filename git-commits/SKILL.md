@@ -1,6 +1,6 @@
 ---
 name: git-commits
-description: Draft, rewrite, and review Git commit messages using Conventional Commits and commit hygiene rules. Use when the user asks to write commit messages, improve commit quality, choose commit type/scope, describe breaking changes, add trailers (for example See or Co-authored-by), split work into atomic commits, or prepare commits before opening a PR.
+description: Draft, rewrite, and review Git commit messages using Conventional Commits and commit hygiene rules. Use whenever the user asks for commit text, commit message fixes, type/scope selection, breaking-change notation, trailers (for example See or Co-authored-by), splitting work into atomic commits, or commit readiness before a PR, even if they ask in informal terms like "polish this commit message".
 ---
 
 # Git Commits
@@ -15,24 +15,24 @@ Help readers and tools quickly understand commit intent, impact, and context.
 
 Use this table as the single source of truth.
 
-| ID       | Scope              | Requirement                                                                                                                                          |
-| -------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `FMT-1`  | Message shape      | Commit message MUST follow: `<type>[optional scope]: <subject>`, optional body, optional footer(s), with blank lines between sections.               |
-| `FMT-2`  | Allowed types      | Type MUST be one of: `feat`, `fix`, `docs`, `refactor`, `chore`, `revert`.                                                                           |
-| `FMT-3`  | Header length      | Header SHOULD be <= 50 chars and MUST be <= 72 chars.                                                                                                |
-| `FMT-4`  | Subject style      | Subject MUST be imperative/present tense and MUST NOT end with a period.                                                                             |
-| `FMT-5`  | Breaking changes   | If the commit introduces a breaking API change, header MUST use `!` and message MUST include `BREAKING CHANGE: <description>` with migration impact. |
-| `FMT-6`  | Scope              | Scope is optional and SHOULD be used when it improves clarity.                                                                                       |
-| `FMT-7`  | Unsupported type requests | If the requested type is outside the allowed set, output MUST map to the closest allowed type and explicitly explain the mapping.               |
-| `BODY-1` | Body usage         | Body is optional; when present it MUST explain motivation, context, and behavior change (not only implementation detail).                            |
-| `BODY-2` | Body formatting    | Body SHOULD wrap normal prose at ~72 chars per line; long URLs and terminal snippets MAY exceed this.                                                |
-| `FTR-1`  | Trailer format     | Footers/trailers SHOULD follow `Token: value` (or `Token #value`) so they remain compatible with `git interpret-trailers`.                           |
-| `FTR-2`  | Tracking links     | Use `See:` trailers for tracker/docs/reference URLs; emit one URL per line.                                                                          |
-| `FTR-3`  | Co-authors         | Use `Co-authored-by: Name <email>` trailers when multiple people co-authored the change.                                                             |
-| `REV-1`  | Reverts            | `revert` commits SHOULD repeat reverted header and body SHOULD include `This reverts commit <hash>.`                                                 |
-| `HYG-1`  | Atomicity          | Commits SHOULD be small, logical, and atomic; avoid mixing unrelated changes.                                                                        |
-| `HYG-2`  | Whitespace changes | Significant whitespace-only changes SHOULD be in a separate commit.                                                                                  |
-| `HYG-3`  | Tests              | If code changes require test updates, include test updates in the same commit.                                                                       |
+| ID       | Scope                     | Requirement                                                                                                                                                                                                                                                    |
+| -------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `FMT-1`  | Message shape             | Commit message MUST follow: `<type>[optional scope]: <subject>`, optional body, optional footer(s), with blank lines between sections.                                                                                                                         |
+| `FMT-2`  | Allowed types             | Type MUST be one of: `feat`, `fix`, `docs`, `refactor`, `chore`, `revert`.                                                                                                                                                                                     |
+| `FMT-3`  | Header length             | Header SHOULD be <= 50 chars and MUST be <= 72 chars.                                                                                                                                                                                                          |
+| `FMT-4`  | Subject style             | Subject MUST be imperative/present tense and MUST NOT end with a period.                                                                                                                                                                                       |
+| `FMT-5`  | Breaking changes          | If the commit introduces a breaking API change, header MUST use `!` and message MUST include `BREAKING CHANGE: <description>` with migration impact.                                                                                                           |
+| `FMT-6`  | Scope                     | Scope is optional and SHOULD be used when it improves clarity.                                                                                                                                                                                                 |
+| `FMT-7`  | Unsupported type requests | If the requested type is outside the allowed set, output MUST map to the closest allowed type. In `rewrite` and `review` modes, output MUST explicitly explain the mapping; in `draft` mode, explanation SHOULD be omitted unless the user asks for rationale. |
+| `BODY-1` | Body usage                | Body is optional; when present it MUST explain motivation, context, and behavior change (not only implementation detail).                                                                                                                                      |
+| `BODY-2` | Body formatting           | Body SHOULD wrap normal prose at ~72 chars per line; long URLs and terminal snippets MAY exceed this.                                                                                                                                                          |
+| `FTR-1`  | Trailer format            | Footers/trailers SHOULD follow `Token: value` (or `Token #value`) so they remain compatible with `git interpret-trailers`.                                                                                                                                     |
+| `FTR-2`  | Tracking links            | Use `See:` trailers for tracker/docs/reference URLs; emit one URL per line.                                                                                                                                                                                    |
+| `FTR-3`  | Co-authors                | Use `Co-authored-by: Name <email>` trailers when multiple people co-authored the change.                                                                                                                                                                       |
+| `REV-1`  | Reverts                   | `revert` commits SHOULD repeat reverted header and body SHOULD include `This reverts commit <hash>.`                                                                                                                                                           |
+| `HYG-1`  | Atomicity                 | Commits SHOULD be small, logical, and atomic; avoid mixing unrelated changes.                                                                                                                                                                                  |
+| `HYG-2`  | Whitespace changes        | Significant whitespace-only changes SHOULD be in a separate commit.                                                                                                                                                                                            |
+| `HYG-3`  | Tests                     | If code changes require test updates, include test updates in the same commit.                                                                                                                                                                                 |
 
 ## Semver intent by type
 
@@ -59,6 +59,7 @@ Choose exactly one mode based on user intent:
 
 1. `draft`
    - Output only one final commit message, ready to paste into `git commit`.
+   - Do not add explanatory prose unless the user explicitly asks for explanation.
 2. `rewrite`
    - Output one rewritten commit message first.
    - Then provide a short `Why this is better` list focused on violated rule IDs.
@@ -75,7 +76,8 @@ If a user asks for a non-supported type, keep the intent but map to allowed type
 - `perf` -> `refactor`
 - `style`, `test`, `ci`, `build` -> `chore`
 
-When mapping is used, explicitly state: `Mapped requested type <x> to <y> to satisfy FMT-2`.
+When mapping is used in `rewrite` or `review`, explicitly state:
+`Mapped requested type <x> to <y> to satisfy FMT-2`.
 
 ## Type compatibility with other skills
 
@@ -100,7 +102,7 @@ When mapping is used, explicitly state: `Mapped requested type <x> to <y> to sat
 
 - Validate all applicable `FMT-*`, `BODY-*`, `FTR-*`, `REV-*`, and `HYG-*` rules.
 - Ensure final message is copy-paste ready for `git commit`.
-- Ensure unsupported type requests are explicitly mapped and justified.
+- Ensure unsupported type requests are mapped and explained when required by output mode.
 - For detailed conventions and more examples, verify against `references/git-commit.md`.
 
 ## Prompt templates

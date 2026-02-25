@@ -29,8 +29,8 @@ Helps an AI agent draft and review Git commit messages using the
 
 ### `git-trunk-based-workflow`
 
-Helps an AI agent plan and execute Trunk-Based Development workflow on repositories that use
-`main` as trunk.
+Helps an AI agent plan and execute Trunk-Based Development workflow on repositories that use `main`
+as trunk.
 
 - Skill README: [`git-trunk-based-workflow/README.md`](git-trunk-based-workflow/README.md)
 - Skill path: [`git-trunk-based-workflow/SKILL.md`](git-trunk-based-workflow/SKILL.md)
@@ -43,7 +43,7 @@ Helps an AI agent plan and execute Trunk-Based Development workflow on repositor
 
 ## Skill routing rules
 
-- `SHOULD` use `common-changelog` for generating or normalizing `CHANGELOG.md`.
+- `MUST` route changelog/release-notes generation and normalization to `common-changelog`.
 - `MUST` route commit message wording/formatting to `git-commits`.
 - `MUST` route Git branch/PR/rebase workflow questions to `git-trunk-based-workflow`.
 

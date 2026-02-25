@@ -157,38 +157,103 @@ check_markdown_links() {
   done < <(grep -oE '!?\[[^]]+\]\([^)]+\)' "$file" || true)
 }
 
+validate_script_path() {
+  local workflow_file="$1"
+  local line_no="$2"
+  local script_path="$3"
+  local normalized_path="${script_path#./}"
+
+  if [[ ! -f "$normalized_path" ]]; then
+    error "Missing script referenced in $workflow_file:$line_no: $normalized_path"
+    return
+  fi
+
+  if [[ ! -x "$normalized_path" ]]; then
+    error "Script referenced in $workflow_file:$line_no is not executable: $normalized_path"
+  fi
+}
+
+check_workflow_run_command() {
+  local workflow_file="$1"
+  local line_no="$2"
+  local command="$3"
+
+  command="$(trim "${command%%#*}")"
+  [[ -z "$command" ]] && return
+
+  local sanitized="$command"
+  sanitized="${sanitized//\"/}"
+  sanitized="${sanitized//\'/}"
+
+  local match
+  while IFS= read -r match; do
+    local script_path
+    script_path="$(trim "$match")"
+    [[ -z "$script_path" ]] && continue
+    validate_script_path "$workflow_file" "$line_no" "$script_path"
+  done < <(grep -oE '(^|[[:space:]])(\./)?scripts/[A-Za-z0-9._/-]+' <<<"$sanitized" | sed -E 's/^[[:space:]]+//' || true)
+}
+
 check_workflow_script_runs() {
   local workflow_file="$1"
   local line_no=0
+  local in_multiline_run=0
+  local multiline_indent=0
 
   while IFS= read -r line || [[ -n "$line" ]]; do
     line_no=$((line_no + 1))
+    local indent="${line%%[^ ]*}"
+    local indent_len=${#indent}
 
-    if [[ ! "$line" =~ ^[[:space:]]*(-[[:space:]]*)?run:[[:space:]]*(.+)$ ]]; then
+    if ((in_multiline_run)); then
+      if [[ "$line" =~ ^[[:space:]]*$ ]]; then
+        continue
+      fi
+
+      if ((indent_len <= multiline_indent)); then
+        in_multiline_run=0
+      else
+        check_workflow_run_command "$workflow_file" "$line_no" "$line"
+        continue
+      fi
+    fi
+
+    if [[ ! "$line" =~ ^[[:space:]]*(-[[:space:]]*)?run:[[:space:]]*(.*)$ ]]; then
       continue
     fi
 
     local command
     command="$(trim "${BASH_REMATCH[2]}")"
     command="$(trim "${command%%#*}")"
-    [[ -z "$command" ]] && continue
 
-    local script_path=""
-    if [[ "$command" =~ ^[\"\']?(\./)?(scripts/[A-Za-z0-9._/-]+)[\"\']?($|[[:space:]]) ]]; then
-      script_path="${BASH_REMATCH[2]}"
-    fi
-
-    [[ -z "$script_path" ]] && continue
-
-    if [[ ! -f "$script_path" ]]; then
-      error "Missing script referenced in $workflow_file:$line_no: $script_path"
-      continue
-    fi
-
-    if [[ ! -x "$script_path" ]]; then
-      error "Script referenced in $workflow_file:$line_no is not executable: $script_path"
-    fi
+    case "$command" in
+      ""|"|"|"|-"|">"|">-")
+        in_multiline_run=1
+        multiline_indent=$indent_len
+        ;;
+      *)
+        check_workflow_run_command "$workflow_file" "$line_no" "$command"
+        ;;
+    esac
   done < "$workflow_file"
+}
+
+check_skill_mentions() {
+  local doc_file="$1"
+  local skill_name="$2"
+
+  if ! grep -q "\`$skill_name\`" "$doc_file"; then
+    error "$doc_file is missing skill mention: \`$skill_name\`"
+  fi
+}
+
+check_routing_rule_presence() {
+  local doc_file="$1"
+  local skill_name="$2"
+
+  if ! grep -qiE "(route|use).*\`?$skill_name\`?|\`?$skill_name\`?.*(route|use)" "$doc_file"; then
+    error "$doc_file is missing routing guidance for: $skill_name"
+  fi
 }
 
 main() {
@@ -211,6 +276,29 @@ main() {
   local skill_dir
   for skill_dir in "${skill_dirs[@]}"; do
     check_skill_frontmatter "$skill_dir/SKILL.md"
+  done
+
+  local required_doc
+  for required_doc in AGENTS.md README.md; do
+    if [[ -f "$required_doc" ]]; then
+      for skill_dir in "${skill_dirs[@]}"; do
+        check_skill_mentions "$required_doc" "$skill_dir"
+      done
+    fi
+  done
+
+  local routing_skill
+  for routing_skill in common-changelog git-commits git-trunk-based-workflow; do
+    if [[ ! -d "$routing_skill" ]]; then
+      continue
+    fi
+
+    if [[ -f AGENTS.md ]]; then
+      check_routing_rule_presence "AGENTS.md" "$routing_skill"
+    fi
+    if [[ -f README.md ]]; then
+      check_routing_rule_presence "README.md" "$routing_skill"
+    fi
   done
 
   local -a doc_files=()

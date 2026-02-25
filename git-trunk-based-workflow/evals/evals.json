@@ -1,0 +1,65 @@
+{
+  "skill_name": "git-trunk-based-workflow",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Give me a trunk-based flow from branch creation to merge for a feature on main.",
+      "expected_output": "Stepwise workflow includes preflight checks, branch creation from updated main, PR, merge, and cleanup.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Review these commands and fix them: git checkout main && git commit -m 'wip' && git push.",
+      "expected_output": "Guidance prevents direct commits to main and replaces with safe feature-branch workflow.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "I hit rebase conflicts; what exact commands should I run now?",
+      "expected_output": "Response includes git status, resolve/add, rebase --continue, and rebase --abort fallback.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "How do I safely push after interactive rebase?",
+      "expected_output": "Guidance explicitly uses --force-with-lease and explains rewrite safety.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "My branch has merge commits I need to preserve while syncing with main.",
+      "expected_output": "Workflow recommends rebase --rebase-merges only when needed and preserves safety sequence.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "Provide post-merge cleanup commands for local and remote branches.",
+      "expected_output": "Checklist includes branch deletion and remote prune commands in execution order.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "I need commit message wording for this branch before opening PR.",
+      "expected_output": "Skill explicitly routes commit wording request to git-commits while keeping workflow scope clear.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "Show a safe local merge flow when GitHub UI merge is unavailable.",
+      "expected_output": "Commands are copy-paste-ready and include pull --ff-only before local merge to main.",
+      "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "I have uncommitted changes and need to create a feature branch now.",
+      "expected_output": "Preflight explicitly checks working tree and instructs commit/stash/discard before branch operations.",
+      "files": []
+    },
+    {
+      "id": 10,
+      "prompt": "Draft a quick trunk workflow checklist for a new teammate.",
+      "expected_output": "Output remains consistent with WF rules and avoids recommending long-lived integration branches.",
+      "files": []
+    }
+  ]
+}

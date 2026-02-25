@@ -1,6 +1,6 @@
 ---
 name: common-changelog
-description: Draft and normalize user-facing CHANGELOG.md entries in Common Changelog format from release notes, pull requests, and Conventional Commits (including git trailers like Category, Ref, and Co-authored-by).
+description: Draft and normalize user-facing CHANGELOG.md entries in Common Changelog format from release notes, pull requests, and Conventional Commits (including git trailers like Category, Ref, and Co-authored-by). Use this skill whenever the user asks for changelog text, release notes, "what changed", version summaries, or Unreleased notes, even if they do not explicitly mention CHANGELOG.md.
 ---
 
 # Common Changelog
@@ -11,6 +11,11 @@ Write human-facing changelog entries in Common Changelog format.
 
 Use this skill when asked to generate, update, or normalize `CHANGELOG.md` from commits, PRs, or
 release notes.
+
+## When not to use
+
+- Do not use for commit message wording; route to `git-commits`.
+- Do not use for branch/rebase/PR process guidance; route to `git-trunk-based-workflow`.
 
 ## Goal
 
@@ -29,7 +34,7 @@ Choose exactly one output mode:
 
 If user intent is ambiguous, default to release-fragment mode.
 
-When metadata is incomplete, keep producing output and prepend:
+When metadata is incomplete, keep producing output and append:
 
 ```text
 Warnings:
@@ -38,6 +43,7 @@ Warnings:
 ```
 
 Only include `Warnings:` when at least one warning exists.
+Warnings are out-of-band metadata and MUST appear after the primary changelog artifact.
 
 ## Normative language
 
@@ -49,23 +55,23 @@ Only include `Warnings:` when at least one warning exists.
 
 Use this table as the single source of truth for output structure and bullet formatting.
 
-| ID | Scope | Requirement |
-| --- | --- | --- |
-| `FMT-1` | Output scope | In full-file mode, output MUST be a valid `CHANGELOG.md` and first heading MUST be `# Changelog`; in release-fragment mode, output MUST be exactly one release block. |
-| `FMT-2` | Release ordering | If present, `Unreleased` MUST be the first release heading and MUST NOT be included in semantic version ordering. |
-| `FMT-3` | Release ordering | Released versions (excluding `Unreleased`) MUST be sorted latest-first by semantic version. |
-| `FMT-4` | Release headings | Release heading MUST include ISO date `YYYY-MM-DD`; linked format `## [1.2.3] - YYYY-MM-DD` is SHOULD, plain `## 1.2.3 - YYYY-MM-DD` is MAY. |
-| `FMT-5` | Link refs | If any release heading is linked (`## [<label>] - YYYY-MM-DD`), trailing link references MUST be present at file end and define each linked label exactly once. |
-| `FMT-6` | `Unreleased` link | If `Unreleased` is a linked heading, its reference MUST use a compare URL ending with `...HEAD`. |
-| `FMT-7` | Release links | Linked released versions SHOULD point to release tags (matching repository tag conventions). |
-| `FMT-8` | Sections | Release groups MUST use only, and in this order: `Changed`, `Added`, `Removed`, `Fixed`; empty groups MUST NOT be emitted. |
-| `FMT-9` | No user-facing changes | If a release has no user-facing changes, default is skip; if explicitly requested, MAY add a one-line maintenance notice. |
-| `BUL-1` | Writing style | Use imperative style (`Add`, `Fix`, `Remove`, `Bump`), keep bullets concise, and describe user impact (not internal trivia). |
-| `BUL-2` | Breaking changes | Breaking changes MUST be prefixed with `**Breaking:**`. |
-| `BUL-3` | Bullet group order | Every bullet MUST follow this order: optional references group, required commit-links group, required final authors group. Commit-links group MUST contain at least one commit link when available; otherwise use `source unavailable` and emit a warning. |
-| `BUL-4` | Group formatting | References, commit links, and authors MUST each appear in one parentheses group; multi-item groups MUST use comma-separated lists. |
-| `BUL-5` | Template source | Bullet shape and full file layout MUST follow `references/CHANGELOG.md`. |
-| `BUL-6` | Missing metadata | If author metadata is missing, authors group MUST be `(Unknown author)` and a warning MUST be emitted. |
+| ID      | Scope                  | Requirement                                                                                                                                                                                                                                                                    |
+| ------- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `FMT-1` | Output scope           | In full-file mode, output MUST be a valid `CHANGELOG.md` and first heading MUST be `# Changelog`; in release-fragment mode, output MUST contain exactly one release block. Optional trailing `Warnings:` metadata MAY appear after the artifact when needed.                   |
+| `FMT-2` | Release ordering       | If present, `Unreleased` MUST be the first release heading and MUST NOT be included in semantic version ordering.                                                                                                                                                              |
+| `FMT-3` | Release ordering       | Released versions (excluding `Unreleased`) MUST be sorted latest-first by semantic version.                                                                                                                                                                                    |
+| `FMT-4` | Release headings       | Released version headings MUST include ISO date `YYYY-MM-DD`; linked format `## [1.2.3] - YYYY-MM-DD` is SHOULD, plain `## 1.2.3 - YYYY-MM-DD` is MAY. `Unreleased` SHOULD be undated (`## [Unreleased]` or `## Unreleased`) unless the user explicitly asks for a dated form. |
+| `FMT-5` | Link refs              | If any release heading is linked (`## [<label>] - YYYY-MM-DD`), trailing link references MUST be present at file end and define each linked label exactly once.                                                                                                                |
+| `FMT-6` | `Unreleased` link      | If `Unreleased` is a linked heading, its reference MUST use a compare URL ending with `...HEAD`.                                                                                                                                                                               |
+| `FMT-7` | Release links          | Linked released versions SHOULD point to release tags (matching repository tag conventions).                                                                                                                                                                                   |
+| `FMT-8` | Sections               | Release groups MUST use only, and in this order: `Changed`, `Added`, `Removed`, `Fixed`; empty groups MUST NOT be emitted.                                                                                                                                                     |
+| `FMT-9` | No user-facing changes | If a release has no user-facing changes, default is skip; if explicitly requested, MAY add a one-line maintenance notice.                                                                                                                                                      |
+| `BUL-1` | Writing style          | Use imperative style (`Add`, `Fix`, `Remove`, `Bump`), keep bullets concise, and describe user impact (not internal trivia).                                                                                                                                                   |
+| `BUL-2` | Breaking changes       | Breaking changes MUST be prefixed with `**Breaking:**`.                                                                                                                                                                                                                        |
+| `BUL-3` | Bullet group order     | Every bullet MUST follow this order: optional references group, required commit-links group, required final authors group. Commit-links group MUST contain at least one commit link when available; otherwise use `source unavailable` and emit a warning.                     |
+| `BUL-4` | Group formatting       | References, commit links, and authors MUST each appear in one parentheses group; multi-item groups MUST use comma-separated lists.                                                                                                                                             |
+| `BUL-5` | Template source        | Bullet shape and full file layout MUST follow `references/CHANGELOG.md`.                                                                                                                                                                                                       |
+| `BUL-6` | Missing metadata       | If author metadata is missing, authors group MUST be `(Unknown author)` and a warning MUST be emitted.                                                                                                                                                                         |
 
 ## Input model
 
