@@ -1,6 +1,6 @@
 # AGENTS.md
 
-This file is the AI-agent entrypoint for this repository.
+This file is the AI-agent entry point for this repository.
 
 ## Repository purpose
 
@@ -21,10 +21,19 @@ This repository hosts AI skills in the Agent Skills format.
 - Input focus: release notes, PRs, Conventional Commits, and trailers (`Category`, `Ref`, `Re`,
   `Co-Authored-By`)
 
+### `git-commits`
+
+- Path: `git-commits/SKILL.md`
+- Purpose: draft, rewrite, and review Git commit messages in Conventional Commits format
+- Input focus: commit intent, type/scope selection, breaking changes, trailers (`See`,
+  `Co-authored-by`), and commit hygiene
+
 ## Install skill
 
+Use one of the skill names listed above:
+
 ```bash
-npx skills add octivi/skills --skill common-changelog
+npx skills add octivi/skills --skill <skill_name>
 ```
 
 ## Agent working rules for this repo

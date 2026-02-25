@@ -15,6 +15,14 @@ entries using the [Common Changelog](https://common-changelog.org/) format.
 - Skill README: [`common-changelog/README.md`](common-changelog/README.md)
 - Skill path: [`common-changelog/SKILL.md`](common-changelog/SKILL.md)
 
+### `git-commits`
+
+Helps an AI agent draft and review Git commit messages using the
+[Conventional Commits](https://conventionalcommits.org/) convention.
+
+- Skill README: [`git-commits/README.md`](git-commits/README.md)
+- Skill path: [`git-commits/SKILL.md`](git-commits/SKILL.md)
+
 ## For AI agents
 
 - Agent entrypoint: [`AGENTS.md`](AGENTS.md)
