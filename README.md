@@ -14,6 +14,12 @@ Each skill listed below can be installed with: `npx skills add octivi/skills --s
 Helps an AI agent write and normalize [`CHANGELOG.md`](common-changelog/references/CHANGELOG.md)
 entries using the [Common Changelog](https://common-changelog.org/) format.
 
+Install:
+
+```bash
+npx skills add octivi/skills --skill common-changelog
+```
+
 - Skill README: [`common-changelog/README.md`](common-changelog/README.md)
 - Skill path: [`common-changelog/SKILL.md`](common-changelog/SKILL.md)
 - Reference: [`common-changelog/references/CHANGELOG.md`](common-changelog/references/CHANGELOG.md)
@@ -23,6 +29,12 @@ entries using the [Common Changelog](https://common-changelog.org/) format.
 Helps an AI agent draft and review Git commit messages using the
 [Conventional Commits](https://conventionalcommits.org/) convention.
 
+Install:
+
+```bash
+npx skills add octivi/skills --skill git-commits
+```
+
 - Skill README: [`git-commits/README.md`](git-commits/README.md)
 - Skill path: [`git-commits/SKILL.md`](git-commits/SKILL.md)
 - Reference: [`git-commits/references/git-commit.md`](git-commits/references/git-commit.md)
@@ -31,6 +43,12 @@ Helps an AI agent draft and review Git commit messages using the
 
 Helps an AI agent plan and execute Trunk-Based Development workflow on repositories that use `main`
 as trunk.
+
+Install:
+
+```bash
+npx skills add octivi/skills --skill git-trunk-based-workflow
+```
 
 - Skill README: [`git-trunk-based-workflow/README.md`](git-trunk-based-workflow/README.md)
 - Skill path: [`git-trunk-based-workflow/SKILL.md`](git-trunk-based-workflow/SKILL.md)
