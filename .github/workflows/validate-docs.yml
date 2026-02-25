@@ -1,0 +1,27 @@
+---
+# SPDX-FileCopyrightText: 2026  IMAGIN sp. z o.o.
+# SPDX-FileContributor: Marcin Engelmann <mengelmann@octivi.com>
+# SPDX-License-Identifier: MIT
+#
+# This file is part of the configuration created by Octivi's DevOps team.
+# Details at https://octivi.com/devops
+name: Validate skills docs
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  docs-validate:
+    name: Validate skill docs and structure
+    runs-on: ubuntu-slim
+    permissions:
+      contents: read
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v6
+
+      - name: Run docs validator
+        run: scripts/validate-skills-docs.sh
