@@ -1,3 +1,6 @@
+[![License: MIT](https://img.shields.io/github/license/octivi/skills)](https://choosealicense.com/licenses/mit/)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org/)
+
 # common-changelog
 
 Skill for writing and normalizing user-facing `CHANGELOG.md` entries in
@@ -20,3 +23,7 @@ npx skills add octivi/skills --skill common-changelog
 - Skill definition: [`SKILL.md`](SKILL.md)
 - Local template: [`references/CHANGELOG.md`](references/CHANGELOG.md)
 - License: [`LICENSE`](LICENSE)
+
+## License
+
+All content is provided under the terms of [The MIT License](./LICENSE).

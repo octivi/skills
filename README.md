@@ -1,11 +1,13 @@
 # Octivi Skills
 
+[![License: MIT](https://img.shields.io/github/license/octivi/skills)](https://choosealicense.com/licenses/mit/)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org/)
+
 Repository of installable AI skills.
 
 ## Available skills
 
-Each skill listed below can be installed with:
-`npx skills add octivi/skills --skill <skill_name>`
+Each skill listed below can be installed with: `npx skills add octivi/skills --skill <skill_name>`
 
 ### `common-changelog`
 
@@ -37,4 +39,8 @@ as trunk.
 
 ## For AI agents
 
-- Agent entrypoint: [`AGENTS.md`](AGENTS.md)
+- Agent entry point: [`AGENTS.md`](AGENTS.md)
+
+## License
+
+All content is provided under the terms of [The MIT License](./LICENSE).

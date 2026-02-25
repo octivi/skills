@@ -1,3 +1,6 @@
+[![License: MIT](https://img.shields.io/github/license/octivi/skills)](https://choosealicense.com/licenses/mit/)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org/)
+
 # git trunk based workflow
 
 Skill for planning and executing Git Trunk Based Development workflows on repositories that use
@@ -20,3 +23,7 @@ npx skills add octivi/skills --skill git-trunk-based-workflow
 - Skill definition: [`SKILL.md`](SKILL.md)
 - Detailed workflow: [`references/git-workflow.md`](references/git-workflow.md)
 - License: [`LICENSE`](LICENSE)
+
+## License
+
+All content is provided under the terms of [The MIT License](./LICENSE).
