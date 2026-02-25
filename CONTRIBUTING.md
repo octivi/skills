@@ -51,8 +51,7 @@ friendly.
 - `SHOULD` include related test updates in the same commit when behavior changes.
 - `MUST` write imperative subjects and keep the header concise (`<= 72` chars, no trailing period).
 - `MUST` mark breaking changes with `!` in header and a `BREAKING CHANGE:` footer.
-- `SHOULD` use trailers such as `See:` and `Co-authored-by:` when context or authorship requires
-  it.
+- `SHOULD` use trailers such as `See:` and `Co-authored-by:` when context or authorship requires it.
 
 ### Canonical source
 
