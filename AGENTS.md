@@ -41,4 +41,6 @@ npx skills add octivi/skills --skill <skill_name>
 - Keep skills simple unless automation is explicitly required
 - Prefer precise, user-facing output quality rules in `SKILL.md`
 - Keep examples synchronized with canonical templates in `references/`
+- Treat `SKILL.md` as the canonical source for operational rules and trigger behavior
+- Keep extended examples and detailed references in `references/` (do not duplicate in `SKILL.md`)
 - Preserve Conventional Commits semantics when proposing commit messages
