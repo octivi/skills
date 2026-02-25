@@ -25,6 +25,16 @@ Helps an AI agent draft and review Git commit messages using the
 - Skill path: [`git-commits/SKILL.md`](git-commits/SKILL.md)
 - Reference: [`git-commits/references/git-commit.md`](git-commits/references/git-commit.md)
 
+### `git-trunk-based-workflow`
+
+Helps an AI agent plan and execute Trunk Based Development workflow on repositories that use `main`
+as trunk.
+
+- Skill README: [`git-trunk-based-workflow/README.md`](git-trunk-based-workflow/README.md)
+- Skill path: [`git-trunk-based-workflow/SKILL.md`](git-trunk-based-workflow/SKILL.md)
+- Reference:
+  [`git-trunk-based-workflow/references/git-workflow.md`](git-trunk-based-workflow/references/git-workflow.md)
+
 ## For AI agents
 
 - Agent entrypoint: [`AGENTS.md`](AGENTS.md)

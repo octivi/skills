@@ -28,6 +28,14 @@ This repository hosts AI skills in the Agent Skills format.
 - Input focus: commit intent, type/scope selection, breaking changes, trailers (`See`,
   `Co-authored-by`), and commit hygiene
 
+### `git-trunk-based-workflow`
+
+- Path: `git-trunk-based-workflow/SKILL.md`
+- Purpose: guide trunk-based branch strategy, rebase flow, pull request flow, merge, and branch
+  cleanup
+- Input focus: short-lived feature branches, integration with `main`, safe history rewrite, and PR
+  lifecycle
+
 ## Install skill
 
 Use one of the skill names listed above:
@@ -43,4 +51,6 @@ npx skills add octivi/skills --skill <skill_name>
 - Keep examples synchronized with canonical templates in `references/`
 - Treat `SKILL.md` as the canonical source for operational rules and trigger behavior
 - Keep extended examples and detailed references in `references/` (do not duplicate in `SKILL.md`)
+- Route git workflow/process questions to `git-trunk-based-workflow`
+- Route commit message wording/formatting to `git-commits`
 - Preserve Conventional Commits semantics when proposing commit messages
