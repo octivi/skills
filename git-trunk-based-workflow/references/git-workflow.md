@@ -1,4 +1,4 @@
-## Git Trunk Based Workflow Reference
+## Git Trunk-Based Workflow Reference
 
 Detailed reference for Trunk Based Development (TBD) and branch/PR flow in this repository.
 
@@ -51,6 +51,15 @@ Feature branches are short-lived branches used for validation and review:
 - Rebase branch on `main` regularly.
 - If history was rewritten, push with `--force-with-lease`.
 
+### 0. Branch state preflight
+
+```bash
+git branch --show-current
+git status --short
+```
+
+If the working tree is not clean, commit/stash/discard changes before branch operations.
+
 ### 1. Create a feature branch
 
 ```bash
@@ -64,13 +73,13 @@ git switch -c ${feature-branch?}
 ```bash
 git add -p
 git commit
-git push
+git push -u origin HEAD
 ```
 
-First push with upstream:
+Subsequent pushes:
 
 ```bash
-git push -u origin HEAD
+git push
 ```
 
 ### 3. Integrate updates from `main` often
@@ -87,6 +96,21 @@ If branch intentionally contains merge commits that must be preserved:
 ```bash
 git switch ${feature-branch?}
 git rebase --rebase-merges main
+```
+
+If a rebase stops on conflicts:
+
+```bash
+git status
+# resolve conflicts in files
+git add <resolved-file>...
+git rebase --continue
+```
+
+Abort rebase if needed:
+
+```bash
+git rebase --abort
 ```
 
 ### 4. Clean history before opening PR (optional, recommended)
@@ -124,8 +148,8 @@ If local merge is required:
 ```bash
 git switch main
 git pull --ff-only
-git merge --no-ff --edit --message '' ${feature-branch?}
-git push
+git merge --no-ff ${feature-branch?}
+git push origin main
 ```
 
 ### 7. Clean up after merge

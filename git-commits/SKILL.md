@@ -23,6 +23,7 @@ Use this table as the single source of truth.
 | `FMT-4`  | Subject style      | Subject MUST be imperative/present tense and MUST NOT end with a period.                                                                             |
 | `FMT-5`  | Breaking changes   | If the commit introduces a breaking API change, header MUST use `!` and message MUST include `BREAKING CHANGE: <description>` with migration impact. |
 | `FMT-6`  | Scope              | Scope is optional and SHOULD be used when it improves clarity.                                                                                       |
+| `FMT-7`  | Unsupported type requests | If the requested type is outside the allowed set, output MUST map to the closest allowed type and explicitly explain the mapping.               |
 | `BODY-1` | Body usage         | Body is optional; when present it MUST explain motivation, context, and behavior change (not only implementation detail).                            |
 | `BODY-2` | Body formatting    | Body SHOULD wrap normal prose at ~72 chars per line; long URLs and terminal snippets MAY exceed this.                                                |
 | `FTR-1`  | Trailer format     | Footers/trailers SHOULD follow `Token: value` (or `Token #value`) so they remain compatible with `git interpret-trailers`.                           |
@@ -52,19 +53,54 @@ Use this table as the single source of truth.
 [optional footer(s)]
 ```
 
+## Output contract
+
+Choose exactly one mode based on user intent:
+
+1. `draft`
+   - Output only one final commit message, ready to paste into `git commit`.
+2. `rewrite`
+   - Output one rewritten commit message first.
+   - Then provide a short `Why this is better` list focused on violated rule IDs.
+3. `review`
+   - Output `Findings` first, ordered by severity and linked to rule IDs.
+   - If fixes are needed, include `Proposed message` after findings.
+
+## Unsupported type mapping
+
+If a user asks for a non-supported type, keep the intent but map to allowed types:
+
+- `feature` -> `feat`
+- `bugfix`, `hotfix` -> `fix`
+- `perf` -> `refactor`
+- `style`, `test`, `ci`, `build` -> `chore`
+
+When mapping is used, explicitly state: `Mapped requested type <x> to <y> to satisfy FMT-2`.
+
+## Type compatibility with other skills
+
+- This skill enforces a strict output type set (`feat`, `fix`, `docs`, `refactor`, `chore`,
+  `revert`) per `FMT-2`.
+- This restriction applies to messages authored/rewritten by this skill, not to historical commits
+  that may already use broader Conventional Commit variants.
+- The `common-changelog` skill MAY ingest broader input types from history (`perf`, `style`, `test`,
+  `ci`, `build`) and classify them for changelog purposes.
+
 ## Authoring workflow
 
 1. Identify the smallest logical change set; recommend split commits if input is too broad.
 2. Choose `type` (and optional `scope`) by user impact.
-3. Draft concise imperative subject.
-4. Add body only when extra context is needed; explain why and behavior delta.
-5. Add footers/trailers (`See:`, `Co-authored-by:`, `BREAKING CHANGE:`) as needed.
-6. Run `Quality checklist`.
+3. If requested type is unsupported, apply `Unsupported type mapping` and explain why.
+4. Draft concise imperative subject.
+5. Add body only when extra context is needed; explain why and behavior delta.
+6. Add footers/trailers (`See:`, `Co-authored-by:`, `BREAKING CHANGE:`) as needed.
+7. Run `Quality checklist`.
 
 ## Quality checklist
 
 - Validate all applicable `FMT-*`, `BODY-*`, `FTR-*`, `REV-*`, and `HYG-*` rules.
 - Ensure final message is copy-paste ready for `git commit`.
+- Ensure unsupported type requests are explicitly mapped and justified.
 - For detailed conventions and more examples, verify against `references/git-commit.md`.
 
 ## Prompt templates

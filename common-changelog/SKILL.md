@@ -1,6 +1,6 @@
 ---
 name: common-changelog
-description: Draft and normalize user-facing CHANGELOG.md entries in Common Changelog format from release notes, pull requests, and Conventional Commits (including git trailers like Category, Ref, and Co-Authored-By).
+description: Draft and normalize user-facing CHANGELOG.md entries in Common Changelog format from release notes, pull requests, and Conventional Commits (including git trailers like Category, Ref, and Co-authored-by).
 ---
 
 # Common Changelog
@@ -16,6 +16,29 @@ release notes.
 
 Help readers answer: what changed and how it affects them.
 
+## Output contract
+
+Choose exactly one output mode:
+
+1. Full-file mode:
+   - Use when the user asks to create, replace, or normalize an entire `CHANGELOG.md`.
+   - Output MUST be a complete markdown file that starts with `# Changelog`.
+2. Release-fragment mode:
+   - Use when the user asks for a single release entry (for example `1.4.0` or `Unreleased`).
+   - Output MUST contain exactly one release heading and its non-empty groups.
+
+If user intent is ambiguous, default to release-fragment mode.
+
+When metadata is incomplete, keep producing output and prepend:
+
+```text
+Warnings:
+- <warning 1>
+- <warning 2>
+```
+
+Only include `Warnings:` when at least one warning exists.
+
 ## Normative language
 
 - `MUST`: mandatory requirement; fail output if violated
@@ -28,7 +51,7 @@ Use this table as the single source of truth for output structure and bullet for
 
 | ID | Scope | Requirement |
 | --- | --- | --- |
-| `FMT-1` | File | Output file MUST be `CHANGELOG.md` and first heading MUST be `# Changelog`. |
+| `FMT-1` | Output scope | In full-file mode, output MUST be a valid `CHANGELOG.md` and first heading MUST be `# Changelog`; in release-fragment mode, output MUST be exactly one release block. |
 | `FMT-2` | Release ordering | If present, `Unreleased` MUST be the first release heading and MUST NOT be included in semantic version ordering. |
 | `FMT-3` | Release ordering | Released versions (excluding `Unreleased`) MUST be sorted latest-first by semantic version. |
 | `FMT-4` | Release headings | Release heading MUST include ISO date `YYYY-MM-DD`; linked format `## [1.2.3] - YYYY-MM-DD` is SHOULD, plain `## 1.2.3 - YYYY-MM-DD` is MAY. |
@@ -39,9 +62,10 @@ Use this table as the single source of truth for output structure and bullet for
 | `FMT-9` | No user-facing changes | If a release has no user-facing changes, default is skip; if explicitly requested, MAY add a one-line maintenance notice. |
 | `BUL-1` | Writing style | Use imperative style (`Add`, `Fix`, `Remove`, `Bump`), keep bullets concise, and describe user impact (not internal trivia). |
 | `BUL-2` | Breaking changes | Breaking changes MUST be prefixed with `**Breaking:**`. |
-| `BUL-3` | Bullet group order | Every bullet MUST follow this order: optional references group, required commit-links group (at least one commit link), required final authors group. |
+| `BUL-3` | Bullet group order | Every bullet MUST follow this order: optional references group, required commit-links group, required final authors group. Commit-links group MUST contain at least one commit link when available; otherwise use `source unavailable` and emit a warning. |
 | `BUL-4` | Group formatting | References, commit links, and authors MUST each appear in one parentheses group; multi-item groups MUST use comma-separated lists. |
 | `BUL-5` | Template source | Bullet shape and full file layout MUST follow `references/CHANGELOG.md`. |
+| `BUL-6` | Missing metadata | If author metadata is missing, authors group MUST be `(Unknown author)` and a warning MUST be emitted. |
 
 ## Input model
 
@@ -58,7 +82,7 @@ Recognize trailers and reference keywords:
 - `Category:`
 - `Ref:`
 - `Re:`
-- `Co-Authored-By:`
+- `Co-authored-by:`
 - `BREAKING CHANGE:`
 
 Also recognize GitHub issue-linking keywords:
@@ -106,6 +130,14 @@ Rules:
 - `revert` -> `Changed` or `Fixed` based on actual user effect
 - `docs`, `style`, `test`, `chore`, `ci`, `build` -> skip unless user-facing
 
+### Type compatibility notes
+
+- This skill classifies commit history, so it accepts both the strict type set used by
+  `git-commits` and broader Conventional Commit variants observed in existing repositories.
+- Accepted history-only variants include: `perf`, `style`, `test`, `ci`, `build`.
+- This does NOT change the output type policy of `git-commits`; it only affects changelog
+  classification of existing commits.
+
 ### 3) Semantic fallback
 
 If type is missing or unclear:
@@ -120,6 +152,13 @@ If type is missing or unclear:
 - `fix(api): ...` + `Category: add` -> `Added`
 - `feat!:` + `Category: remove` -> `Removed` + `**Breaking:**`
 - `docs:` + `Category: fixed` -> `Fixed`
+
+## Classification decision tree
+
+1. If there is a recognized `Category:` value, map it and stop.
+2. Else, if Conventional Commit type is recognized, apply the type mapping.
+3. Else, classify by semantic user impact (`Changed`/`Added`/`Removed`/`Fixed`).
+4. If breaking signal exists (`!` or `BREAKING CHANGE:`), prefix with `**Breaking:**`.
 
 ## Breaking change handling
 
@@ -145,7 +184,7 @@ Usually skip:
 
 ## References and authors
 
-- Commit hash must be a markdown link:
+- Commit hash SHOULD be a markdown link when available:
   - ``[`d23ba8f`](https://github.com/OWNER/REPO/commit/d23ba8f)``
 - Group formatting for references, commit links, and authors MUST follow `BUL-3` and `BUL-4`
 - Build references from:
@@ -162,17 +201,24 @@ Usually skip:
   1. deduplicate by commit hash
   2. keep first-seen order
 - Use commit author as primary author
-- Append `Co-Authored-By:` names (extract name before `<email>`)
+- Append `Co-authored-by:` names (extract name before `<email>`)
 - Authors MUST be deduplicated in stable first-seen order
 - For aggregated bullets, authors MUST be the deduplicated union of commit authors and
-  `Co-Authored-By:` names from all included commits, preserving stable first-seen order
+  `Co-authored-by:` names from all included commits, preserving stable first-seen order
 - If commit author is a bot and merger is known, prefer the human merger name
+
+## Metadata fallback policy
+
+- If author cannot be determined from metadata, use `(Unknown author)` and emit a warning.
+- If no commit link can be determined, use `(source unavailable)` as the commit-links group and emit
+  a warning.
+- Missing metadata MUST NOT be a sole reason to drop user-facing bullets.
 
 ## Fail policy
 
-- If author cannot be determined from git metadata, MUST NOT emit that bullet; report an error
-- If no commit link can be determined for a bullet, MUST NOT emit that bullet; report an error
-- If any `MUST` rule is violated, fail output instead of silently emitting partial content
+- If any structural `MUST` rule is violated and cannot be recovered with fallback policy, fail.
+- Missing author/commit metadata alone MUST NOT trigger hard fail.
+- If changelog scope is unclear, default to release-fragment mode instead of failing.
 
 ## Authoring workflow
 
@@ -195,6 +241,7 @@ Usually skip:
 
 - Validate all applicable `FMT-*` and `BUL-*` requirements from `Canonical rules table`.
 - Verify output shape against `references/CHANGELOG.md`.
+- Ensure warning messages exist for every metadata fallback.
 - Any checklist failure MUST trigger `Fail policy`.
 
 ## Prompt templates

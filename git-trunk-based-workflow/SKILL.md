@@ -1,9 +1,9 @@
 ---
 name: git-trunk-based-workflow
-description: Plan and execute Git Trunk Based Development workflows on a repository with main as trunk. Use when the user asks for branch strategy, rebasing on main, PR flow, merge strategy, safe history rewrite, or branch cleanup. For commit message formatting and Conventional Commits wording, delegate to git-commits.
+description: Plan and execute Git Trunk-Based Development workflows on a repository with main as trunk. Use when the user asks for branch strategy, rebasing on main, PR flow, merge strategy, safe history rewrite, or branch cleanup. For commit message formatting and Conventional Commits wording, delegate to git-commits.
 ---
 
-# Git Trunk Based Workflow
+# Git Trunk-Based Workflow
 
 Guide contributors through a safe trunk-based Git workflow.
 
@@ -25,16 +25,47 @@ Use this table as the single source of truth for workflow decisions.
 | `WF-6` | Merge mode       | Prefer standard repository merge path (typically GitHub UI) unless local merge is required. |
 | `WF-7` | Cleanup          | After merge, clean up local/remote branch references.                                       |
 | `WF-8` | Safety           | Commands provided to users MUST be copy-paste ready and scoped to their current step.       |
+| `WF-9` | Preflight        | Before branch operations, verify current branch and working tree state.                      |
+| `WF-10` | Conflict recovery | Rebase guidance MUST include safe conflict resolution (`--continue` / `--abort`).           |
+
+## Branch state preflight
+
+Run before creating/rebasing/merging branches:
+
+```bash
+git branch --show-current
+git status --short
+```
+
+If working tree is not clean, pause and either commit, stash, or discard changes before proceeding.
+
+## Rebase conflict handling
+
+When `git rebase` stops on conflict:
+
+```bash
+git status
+# resolve conflicts in files
+git add <resolved-file>...
+git rebase --continue
+```
+
+If you need to cancel the rebase:
+
+```bash
+git rebase --abort
+```
 
 ## Authoring workflow
 
-1. Confirm branch context (`main` vs feature branch) and current goal.
+1. Run `Branch state preflight` and confirm current goal.
 2. Create or switch to a short-lived feature branch from up-to-date `main`.
 3. Commit and push incremental progress to the feature branch.
 4. Rebase feature branch onto `main` frequently (use `--rebase-merges` only when needed).
-5. Optionally clean branch history before opening PR.
-6. Open and land PR to `main` with green CI and addressed feedback.
-7. Clean up merged branches locally and remotely.
+5. If rebase conflicts occur, execute `Rebase conflict handling`.
+6. Optionally clean branch history before opening PR.
+7. Open and land PR to `main` with green CI and addressed feedback.
+8. Clean up merged branches locally and remotely.
 
 For full command sequences and edge-case notes, use `references/git-workflow.md`.
 
@@ -47,6 +78,7 @@ For full command sequences and edge-case notes, use `references/git-workflow.md`
 - Guidance conforms to all applicable `WF-*` rules.
 - Commands are copy-paste ready and ordered by execution flow.
 - No recommendation conflicts with repository branch policy (`main` as trunk).
+- Preflight and rebase conflict recovery commands are included when relevant.
 - If user asks about commit message style, explicitly route to `git-commits`.
 
 ## Prompt templates

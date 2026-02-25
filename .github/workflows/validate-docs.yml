@@ -24,4 +24,4 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Run docs validator
-        run: scripts/validate-skills-docs.sh
+        run: scripts/validate-skills-docs
