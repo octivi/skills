@@ -46,7 +46,8 @@ Use body only when the header is not enough.
 
 - Explain why the change exists.
 - Explain behavioral delta (`Previously ...`, `Now ...`).
-- Keep prose wrapped around 72 chars when practical.
+- Keep each non-subject line at <= 72 chars when practical and <= 100 chars always.
+- Prefer shorter links or rewording over lines that would exceed 100 chars.
 - Prefer fully qualified URLs for external references.
 
 ## Footer and trailer rules
